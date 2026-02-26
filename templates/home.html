@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Screen Share{% endblock %}
+
+{% block metas %}
+{{super()}}
+<meta charset="UTF-8"/>
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<style>
+    body { background: #1a1a2e; color: #eee; }
+    .hero { text-align: center; padding: 80px 20px; }
+    .hero h1 { font-size: 3em; margin-bottom: 10px; color: #e94560; }
+    .hero p { font-size: 1.2em; color: #aaa; margin-bottom: 40px; }
+    .actions { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+    .card-action {
+        background: #16213e;
+        border-radius: 12px;
+        padding: 40px 50px;
+        text-align: center;
+        text-decoration: none;
+        color: #eee;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #0f3460;
+    }
+    .card-action:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(233,69,96,0.3);
+        text-decoration: none;
+        color: #fff;
+    }
+    .card-action h2 { color: #e94560; margin-bottom: 10px; }
+    .card-action p { color: #aaa; margin: 0; }
+    .instructions {
+        max-width: 600px;
+        margin: 50px auto;
+        background: #16213e;
+        border-radius: 12px;
+        padding: 30px;
+        border: 1px solid #0f3460;
+    }
+    .instructions h3 { color: #e94560; }
+    .instructions code {
+        background: #0f3460;
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: #53d8fb;
+    }
+    .instructions pre {
+        background: #0f3460;
+        padding: 12px;
+        border-radius: 8px;
+        color: #53d8fb;
+        overflow-x: auto;
+    }
+</style>
+{% endblock %}
+
+{% block body_attribs %}class="homepage"{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>&#128187; Screen Share</h1>
+    <p>Share your screen with anyone on the network</p>
+
+    <div class="actions">
+        <a href="/view" class="card-action" id="view-btn">
+            <h2>&#128065; View Screen</h2>
+            <p>Watch the shared screen</p>
+        </a>
+    </div>
+
+    <div class="instructions">
+        <h3>How to Share Your Screen</h3>
+        <p>Run this on the PC you want to share:</p>
+        <pre>python sharer.py --server http://{{ request.host }}</pre>
+        <p style="margin-top:15px; font-size:0.9em; color:#888;">
+            Requires: <code>pip install requests pillow</code>
+        </p>
+    </div>
+</div>
+{% endblock %}

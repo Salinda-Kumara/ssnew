@@ -3,8 +3,4 @@ services:
     build: .
     ports:
       - "6100:6100"
-    environment:
-      - DISPLAY=${DISPLAY:-:0}
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
     restart: unless-stopped
