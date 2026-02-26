@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Share Screen{% endblock %}
+
+{% block metas %}
+{{super()}}
+<meta charset="UTF-8" />
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<style>
+    body {
+        background: #1a1a2e;
+        color: #eee;
+    }
+
+    .share-container {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .share-container h1 {
+        color: #e94560;
+        margin-bottom: 10px;
+    }
+
+    .share-container p {
+        color: #aaa;
+        margin-bottom: 30px;
+    }
+
+    #startBtn {
+        background: #e94560;
+        border: none;
+        color: #fff;
+        padding: 15px 40px;
+        font-size: 1.2em;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    #startBtn:hover {
+        background: #c73650;
+    }
+
+    #stopBtn {
+        background: #555;
+        border: none;
+        color: #fff;
+        padding: 15px 40px;
+        font-size: 1.2em;
+        border-radius: 8px;
+        cursor: pointer;
+        display: none;
+        margin-left: 10px;
+    }
+
+    #stopBtn:hover {
+        background: #777;
+    }
+
+    #status {
+        margin-top: 20px;
+        font-size: 1.1em;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .status-sharing {
+        color: #4caf50;
+    }
+
+    .status-stopped {
+        color: #e94560;
+    }
+
+    #preview {
+        margin-top: 30px;
+        max-width: 80%;
+        border-radius: 8px;
+        border: 2px solid #0f3460;
+        display: none;
+    }
+
+    canvas {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block body_attribs %}class="homepage"{% endblock %}
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="share-container">
+    <h1>&#128249; Share Your Screen</h1>
+    <p>Click the button below to start sharing your screen</p>
+
+    <button id="startBtn" onclick="startSharing()">Start Sharing</button>
+    <button id="stopBtn" onclick="stopSharing()">Stop Sharing</button>
+
+    <div id="status"></div>
+
+    <video id="preview" autoplay muted></video>
+    <canvas id="canvas"></canvas>
+</div>
+
+<script>
+    var stream = null;
+    var uploadInterval = null;
+    var FPS = 8;
+
+    function startSharing() {
+        navigator.mediaDevices.getDisplayMedia({
+            video: { cursor: "always" },
+            audio: false
+        }).then(function (s) {
+            stream = s;
+            document.getElementById('preview').style.display = 'inline-block';
+            document.getElementById('preview').srcObject = stream;
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'inline-block';
+            setStatus('Sharing...', 'status-sharing');
+
+            // When user stops sharing via browser UI
+            stream.getVideoTracks()[0].onended = function () {
+                stopSharing();
+            };
+
+            // Start uploading frames
+            uploadInterval = setInterval(captureAndUpload, 1000 / FPS);
+        }).catch(function (err) {
+            setStatus('Error: ' + err.message, 'status-stopped');
+        });
+    }
+
+    function stopSharing() {
+        if (uploadInterval) clearInterval(uploadInterval);
+        if (stream) {
+            stream.getTracks().forEach(function (t) { t.stop(); });
+            stream = null;
+        }
+        document.getElementById('preview').style.display = 'none';
+        document.getElementById('startBtn').style.display = 'inline-block';
+        document.getElementById('stopBtn').style.display = 'none';
+        setStatus('Sharing stopped.', 'status-stopped');
+    }
+
+    function captureAndUpload() {
+        if (!stream) return;
+        var video = document.getElementById('preview');
+        var canvas = document.getElementById('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
+
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+        var base64 = dataUrl.split(',')[1];
+
+        fetch('/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ frame: base64 })
+        }).catch(function (err) {
+            console.error('Upload error:', err);
+        });
+    }
+
+    function setStatus(msg, cls) {
+        var el = document.getElementById('status');
+        el.textContent = msg;
+        el.className = cls;
+    }
+</script>
+{% endblock %}

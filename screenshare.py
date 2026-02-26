@@ -50,6 +50,10 @@ def screenfeed():
         return redirect('/')
 
 ###### Sharer Upload ##########################################
+@app.route('/share')
+def share():
+    return render_template("share.html")
+
 @app.route('/upload', methods=["POST"])
 def upload():
     data = request.get_json()
