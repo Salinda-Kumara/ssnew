@@ -72,4 +72,4 @@ if __name__ == '__main__':
     port = args.port
     screenlive.password = args.password
 
-    app.run(host='0.0.0.0', port=port, threaded=True)
+    app.run(host='0.0.0.0', port=port, threaded=True, ssl_context='adhoc')
