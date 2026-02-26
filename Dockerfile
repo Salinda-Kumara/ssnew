@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pil \
     gir1.2-gtk-3.0 \
     gir1.2-gdkpixbuf-2.0 \
+    xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -19,4 +20,4 @@ COPY . .
 
 EXPOSE 6000
 
-CMD ["python3", "screenshare.py", "-p", "6000"]
+CMD ["sh", "-c", "Xvfb :99 -screen 0 1920x1080x24 &  export DISPLAY=:99 && python3 screenshare.py -p 6000"]
