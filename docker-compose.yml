@@ -2,7 +2,7 @@ services:
   screenshare:
     build: .
     ports:
-      - "6000:6000"
+      - "6100:6100"
     environment:
       - DISPLAY=${DISPLAY:-:0}
     volumes:

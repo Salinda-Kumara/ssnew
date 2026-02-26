@@ -18,6 +18,6 @@ RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
 
 COPY . .
 
-EXPOSE 6000
+EXPOSE 6100
 
-CMD ["sh", "-c", "Xvfb :99 -screen 0 1920x1080x24 & sleep 2 && export DISPLAY=:99 && python3 screenshare.py -p 6000"]
+CMD ["sh", "-c", "Xvfb :99 -screen 0 1920x1080x24 & sleep 2 && export DISPLAY=:99 && python3 screenshare.py -p 6100"]
