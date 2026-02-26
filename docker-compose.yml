@@ -1,0 +1,10 @@
+services:
+  screenshare:
+    build: .
+    ports:
+      - "6000:6000"
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    restart: unless-stopped
