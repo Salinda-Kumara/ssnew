@@ -27,7 +27,7 @@ if sys.platform in ["win32", "darwin"]:
     from PIL import ImageGrab as ig
 else:
     import pyscreenshot as ig
-    bkend = "pygdk3"
+    bkend = "mss"
 
 
 class Screen():

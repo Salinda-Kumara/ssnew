@@ -20,4 +20,4 @@ COPY . .
 
 EXPOSE 6000
 
-CMD ["sh", "-c", "Xvfb :99 -screen 0 1920x1080x24 &  export DISPLAY=:99 && python3 screenshare.py -p 6000"]
+CMD ["sh", "-c", "Xvfb :99 -screen 0 1920x1080x24 & sleep 2 && export DISPLAY=:99 && python3 screenshare.py -p 6000"]
