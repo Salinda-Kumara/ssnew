@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gir1.2-gtk-3.0 \
     gir1.2-gdkpixbuf-2.0 \
     libgirepository1.0-dev \
+    libcairo2-dev \
     gcc \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
